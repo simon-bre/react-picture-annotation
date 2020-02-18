@@ -37,7 +37,7 @@ export class DefaultAnnotationState implements IAnnotationState {
     for (let i = shapes.length - 1; i >= 0; i--) {
       if (shapes[i].checkBoundary(positionX, positionY)) {
         this.context.selectedId = shapes[i].getAnnotationData().id;
-        this.context.currentTransformer = new Transformer(shapes[i]);
+        this.context.currentTransformer = new Transformer(shapes[i], this.context.props.handleWidth);
         const [selectedShape] = shapes.splice(i, 1);
         shapes.push(selectedShape);
         selectedShape.onDragStart(positionX, positionY);

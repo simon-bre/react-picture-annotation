@@ -1,7 +1,5 @@
 import { IShape, IShapeBase } from "Shape";
 
-const NODE_WIDTH = 10;
-
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
@@ -14,10 +12,12 @@ export interface ITransformer {
 
 export default class Transformer implements ITransformer {
   private shape: IShape;
+  private nodeWidth: number;
   private currentNodeCenterIndex: number;
 
-  constructor(shape: IShape) {
+  constructor(shape: IShape, nodeWidth: number=10) {
     this.shape = shape;
+    this.nodeWidth = nodeWidth;
   }
   public checkBoundary = (positionX: number, positionY: number) => {
     const currentCenterIndex = this.getCenterIndexByCursor(
@@ -53,10 +53,10 @@ export default class Transformer implements ITransformer {
 
     for (const item of allCentersTable) {
       const { x, y, width, height } = calculateTruePosition({
-        x: item.x - NODE_WIDTH / 2,
-        y: item.y - NODE_WIDTH / 2,
-        width: NODE_WIDTH,
-        height: NODE_WIDTH
+        x: item.x - this.nodeWidth / 2,
+        y: item.y - this.nodeWidth / 2,
+        width: this.nodeWidth,
+        height: this.nodeWidth
       });
       canvas2D.fillRect(x, y, width, height);
     }
@@ -78,8 +78,8 @@ export default class Transformer implements ITransformer {
     positionY: number
   ) => {
     if (
-      Math.abs(positionX - rectCenterX) <= NODE_WIDTH / 2 &&
-      Math.abs(positionY - rectCenterY) <= NODE_WIDTH / 2
+      Math.abs(positionX - rectCenterX) <= this.nodeWidth / 2 &&
+      Math.abs(positionY - rectCenterY) <= this.nodeWidth / 2
     ) {
       return true;
     }

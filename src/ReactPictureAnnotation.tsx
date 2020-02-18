@@ -20,6 +20,7 @@ interface IReactPictureAnnotationProps {
     onChange: (value: string) => void,
     onDelete: () => void
   ) => React.ReactElement;
+  handleWidth?: number;
 }
 
 interface IStageState {
@@ -199,7 +200,7 @@ export default class ReactPictureAnnotation extends React.Component<
 
         if (isSelected) {
           if (!this.currentTransformer) {
-            this.currentTransformer = new Transformer(item);
+            this.currentTransformer = new Transformer(item, this.props.handleWidth);
           }
 
           hasSelectedItem = true;
