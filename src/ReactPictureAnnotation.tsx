@@ -64,7 +64,7 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   public shapes: IShape[] = [];
-  public currentTransformer: ITransformer;
+  public currentTransformer: ITransformer | null; //fixes bug: when selectedId prop was set, transformer of previous selection was rendered
 
   public state = {
     inputPosition: {
@@ -102,7 +102,7 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   public componentDidUpdate = (preProps: IReactPictureAnnotationProps) => {
-    const { width, height, image } = this.props;
+    const { width, height, image} = this.props;
     if (preProps.width !== width || preProps.height !== height) {
       this.setCanvasDPI();
       this.onShapeChange();
@@ -201,7 +201,7 @@ export default class ReactPictureAnnotation extends React.Component<
         );
 
         if (isSelected) {
-          if (!this.currentTransformer) {
+          if (!this.currentTransformer) { //this can never be true!!!
             this.currentTransformer = new Transformer(item, this.props.handleWidth, this.props.handleColor);
           }
 
@@ -274,6 +274,7 @@ export default class ReactPictureAnnotation extends React.Component<
 
     if (selectedId && selectedId !== this.selectedId) {
       this.selectedId = selectedId;
+      this.currentTransformer = null; //fixes bug: when selectedId prop was set, transformer of previous selection was rendered
       this.onShapeChange();
     }
   };
