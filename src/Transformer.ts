@@ -1,5 +1,8 @@
 import { IShape, IShapeBase } from "Shape";
 
+const DEFAULT_NODE_WIDTH = 10;
+const DEFAULT_NODE_COLOR = '#5c7cfa';
+
 export interface ITransformer {
   checkBoundary: (positionX: number, positionY: number) => boolean;
   startTransformation: (positionX: number, positionY: number) => void;
@@ -13,10 +16,15 @@ export interface ITransformer {
 export default class Transformer implements ITransformer {
   private shape: IShape;
   private nodeWidth: number;
+  private nodeColor: string;
   private currentNodeCenterIndex: number;
 
-  constructor(shape: IShape, nodeWidth: number=10) {
+  constructor(shape: IShape, 
+              nodeWidth: number=DEFAULT_NODE_WIDTH,
+              nodeColor: string=DEFAULT_NODE_COLOR) 
+  {
     this.shape = shape;
+    this.nodeColor = nodeColor;
     this.nodeWidth = nodeWidth;
   }
   public checkBoundary = (positionX: number, positionY: number) => {
@@ -49,7 +57,7 @@ export default class Transformer implements ITransformer {
   ) => {
     const allCentersTable = this.getAllCentersTable();
     canvas2D.save();
-    canvas2D.fillStyle = "#5c7cfa";
+    canvas2D.fillStyle = this.nodeColor;
 
     for (const item of allCentersTable) {
       const { x, y, width, height } = calculateTruePosition({
