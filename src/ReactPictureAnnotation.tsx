@@ -1,3 +1,5 @@
+//BUG#1: when selectedId prop is set, transformer of previous selection is rendered
+
 import React, { MouseEventHandler } from "react";
 import { IAnnotation } from "./Annotation";
 import { IAnnotationState } from "./annotation/AnnotationState";
@@ -64,7 +66,7 @@ export default class ReactPictureAnnotation extends React.Component<
   };
 
   public shapes: IShape[] = [];
-  public currentTransformer: ITransformer | null; //fixes bug: when selectedId prop was set, transformer of previous selection was rendered
+  public currentTransformer: ITransformer;
 
   public state = {
     inputPosition: {
@@ -85,6 +87,7 @@ export default class ReactPictureAnnotation extends React.Component<
     this
   );
   private scaleState = defaultState;
+  private transformerNeedsUpdate: boolean = false; //fixes BUG#1
 
   public componentDidMount = () => {
     const currentCanvas = this.canvasRef.current;
@@ -201,8 +204,10 @@ export default class ReactPictureAnnotation extends React.Component<
         );
 
         if (isSelected) {
-          if (!this.currentTransformer) { //this can never be true!!!
+          //if (!this.currentTransformer) { //this can never be true!!!
+          if (this.transformerNeedsUpdate) { //fixes BUG#1
             this.currentTransformer = new Transformer(item, this.props.handleWidth, this.props.handleColor);
+            this.transformerNeedsUpdate = false;
           }
 
           hasSelectedItem = true;
@@ -274,7 +279,7 @@ export default class ReactPictureAnnotation extends React.Component<
 
     if (selectedId && selectedId !== this.selectedId) {
       this.selectedId = selectedId;
-      this.currentTransformer = null; //fixes bug: when selectedId prop was set, transformer of previous selection was rendered
+      this.transformerNeedsUpdate = true;
       this.onShapeChange();
     }
   };
