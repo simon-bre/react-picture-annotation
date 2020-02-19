@@ -25,6 +25,7 @@ interface IReactPictureAnnotationProps {
   handleWidth?: number;
   handleColor?: string;
   disableZoom?: boolean;
+  selectNewAnnotation?: boolean;
 }
 
 interface IStageState {

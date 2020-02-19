@@ -31,6 +31,10 @@ export default class CreatingAnnotationState implements IAnnotationState {
       data.getAnnotationData().mark.height !== 0
     ) {
       shapes.push(data);
+      if(this.context.props.selectNewAnnotation) {
+        this.context.selectedId = data.getAnnotationData().id;
+        this.context.onShapeChange();
+      }
     } else {
       this.context.selectedId = null;
       onShapeChange();
